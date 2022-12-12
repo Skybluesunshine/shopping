@@ -4,27 +4,70 @@
     <div class="wrapper__input">
       <input type="text" class="wrapper__input__content"
       placeholder="请输入用户名"
+      v-model="username"
       >
     </div>
     <div class="wrapper__input">
       <input type="password" class="wrapper__input__content"
       placeholder="请输入密码"
+      v-model="password"
       >
     </div>
     <div class="wrapper__input">
       <input type="password" class="wrapper__input__content"
       placeholder="确认密码"
+      v-model="checkpassword"
       >
     </div>
-    <div class="wrapper__register-button">注册</div>
-    <div class="wrapper__register-link">已有账号去登陆</div>
+    <div class="wrapper__register-button" @click="handleRegister">注册</div>
+    <div class="wrapper__register-link" @click="handleLoginClick">已有账号去登陆</div>
   </div>
 </template>
 <script>
+import { post } from '../../utils/request'
+import { reactive, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
+// 处理注册相关逻辑
+const useRegisterEffect = () => {
+  const router = useRouter()
+  const data = reactive({
+    username: '',
+    password: '',
+    checkpassword: ''
+  })
+  const handleRegister = async () => {
+    try {
+      const result = await post('/api/user/register', {
+        username: data.username,
+        password: data.password
+      })
+      if (result?.errno === 0) {
+        router.push('/Login')
+      } else {
+        alert('注册失败')
+      }
+    } catch (error) {
+      alert('请求失败')
+    }
+  }
+  const { username, password, checkpassword } = toRefs(data)
+  return { username, password, checkpassword, handleRegister }
+}
+// 已有账号去登录逻辑处理
+const useLoginEffect = () => {
+  const router = useRouter()
+  const handleLoginClick = () => {
+    router.push({ name: 'Login' })
+  }
+  return { handleLoginClick }
+}
+
 export default {
   name: 'Register',
   setup () {
-    return {}
+    const { username, password, checkpassword, handleRegister } = useRegisterEffect()
+    const { handleLoginClick } = useLoginEffect()
+    return { username, password, checkpassword, handleRegister, handleLoginClick }
   }
 }
 </script>
