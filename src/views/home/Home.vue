@@ -2,14 +2,16 @@
   <div class="header">
     <StaticPart />
     <Docker />
+    <Nearby />
   </div>
 </template>
 <script>
 import Docker from './Docker.vue'
 import StaticPart from './StaticPart.vue'
+import Nearby from './Nearby.vue'
 export default {
   name: 'Home',
-  components: { Docker, StaticPart }
+  components: { Docker, StaticPart, Nearby }
 }
 </script>
 <style lang="scss" scoped>
