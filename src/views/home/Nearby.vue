@@ -1,25 +1,26 @@
 <template>
   <div class="nearby">
     <h3 class="nearby__title">附近店铺</h3>
-    <div class="shop">
-      <img class="shop__img" src="http://www.dell-lee.com/imgs/vue3/banner.jpg" alt="">
-      <div class="shop__content">
-        <div class="shop__content__title">name</div>
-        <div class="shop__content__tags">
-          <span class="shop__content__tag">月售:</span>
-          <span class="shop__content__tag">起送:</span>
-          <span class="shop__content__tag">基础运费:</span>
-        </div>
-        <p class="shop__content__highlight">slogan</p>
-      </div>
-    </div>
+    <ShopInfo v-for="item in nearbyList" :key="item._id" :item="item"/>
   </div>
 </template>
 <script>
+import { ref } from 'vue'
+import { get } from '../../utils/request'
+import ShopInfo from '../../components/ShopInfo.vue'
 export default {
   name: 'Nearby',
+  components: { ShopInfo },
   setup () {
-    return {}
+    const nearbyList = ref([])
+    const getNearbyList = async () => {
+      const result = await get('/api/shop/hot-list')
+      if (result?.errno === 0 && result?.data?.length) {
+        nearbyList.value = result.data
+      }
+    }
+    getNearbyList()
+    return { nearbyList, getNearbyList }
   }
 }
 </script>
@@ -68,43 +69,6 @@ export default {
   }
   a {
     text-decoration: none;
-  }
-}
-
-.shop {
-  display: flex;
-  padding-top: .12rem;
-  &__img {
-    margin-right: .16rem;
-    width: .56rem;
-    height: .56rem;
-  }
-  &__content {
-    flex: 1;
-    padding-bottom: .12rem;
-    &--bordered {
-      border-bottom: 1px solid $content-bgColor;
-    }
-    &__title {
-      line-height: .22rem;
-      font-size: .16rem;
-      color: $content-fontcolor;
-    }
-    &__tags {
-      margin-top: .08rem;
-      line-height: .18rem;
-      font-size: .13rem;
-      color: $content-fontcolor;
-    }
-    &__tag {
-      margin-right: .16rem;
-    }
-    &__highlight {
-      margin: .08rem 0 0 0;
-      line-height: .18rem;
-      font-size: .13rem;
-      color: #E93B3B;
-    }
   }
 }
 </style>
