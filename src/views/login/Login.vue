@@ -4,22 +4,53 @@
     <div class="wrapper__input">
       <input class="wrapper__input__content"
       placeholder="请输入用户名"
+      v-model="username"
       >
     </div>
     <div class="wrapper__input">
       <input type="password" class="wrapper__input__content"
       placeholder="请输入密码"
+      v-model="password"
       >
     </div>
-    <div class="wrapper__login-button">登录</div>
+    <div class="wrapper__login-button" @click="handleLogin">登录</div>
     <div class="wrapper__login-link">立即注册</div>
   </div>
 </template>
 <script>
+import { reactive, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
+import { post } from '../../utils/request'
+// 处理登录逻辑
+const userLoginEffect = () => {
+  const router = useRouter()
+  const data = reactive({
+    username: '',
+    password: ''
+  })
+  const handleLogin = async () => {
+    try {
+      const result = await post('/api/user/login', {
+        username: data.username,
+        password: data.password
+      })
+      if (result?.errno === 0) {
+        router.push({ name: 'Home' })
+      } else {
+        alert('登录失败')
+      }
+    } catch (error) {
+      alert('请求失败')
+    }
+  }
+  const { username, password } = toRefs(data)
+  return { username, password, handleLogin }
+}
 export default {
   name: 'Login',
   setup () {
-    return {}
+    const { username, password, handleLogin } = userLoginEffect()
+    return { username, password, handleLogin }
   }
 }
 </script>
