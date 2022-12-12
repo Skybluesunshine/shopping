@@ -1,13 +1,15 @@
 <template>
   <div class="header">
+    <StaticPart />
     <Docker />
   </div>
 </template>
 <script>
 import Docker from './Docker.vue'
+import StaticPart from './StaticPart.vue'
 export default {
   name: 'Home',
-  components: { Docker }
+  components: { Docker, StaticPart }
 }
 </script>
 <style lang="scss" scoped>
