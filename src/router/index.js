@@ -7,22 +7,22 @@ import Cart from '../views/cart/Cart.vue'
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: () => Home
   },
   {
     path: '/my',
-    name: 'my',
+    name: 'My',
     component: () => My
   },
   {
     path: '/order',
-    name: 'order',
+    name: 'Order',
     component: () => Order
   },
   {
     path: '/cart',
-    name: 'cart',
+    name: 'Cart',
     component: () => Cart
   }
 ]
