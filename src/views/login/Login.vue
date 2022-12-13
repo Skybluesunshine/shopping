@@ -15,14 +15,16 @@
     </div>
     <div class="wrapper__login-button" @click="handleLogin">登录</div>
     <div class="wrapper__login-link">立即注册</div>
+    <Toast v-if="show" :msg="toastMessage"/>
   </div>
 </template>
 <script>
 import { reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { post } from '../../utils/request'
+import Toast, { useToastEffect } from '../../components/Toast.vue'
 // 处理登录逻辑
-const userLoginEffect = () => {
+const userLoginEffect = (showToast) => {
   const router = useRouter()
   const data = reactive({
     username: '',
@@ -37,10 +39,12 @@ const userLoginEffect = () => {
       if (result?.errno === 0) {
         router.push({ name: 'Home' })
       } else {
-        alert('登录失败')
+        // alert('登录失败')
+        showToast('登录失败')
       }
     } catch (error) {
-      alert('请求失败')
+      // alert('请求失败')
+      showToast('请求失败')
     }
   }
   const { username, password } = toRefs(data)
@@ -48,9 +52,11 @@ const userLoginEffect = () => {
 }
 export default {
   name: 'Login',
+  components: { Toast },
   setup () {
-    const { username, password, handleLogin } = userLoginEffect()
-    return { username, password, handleLogin }
+    const { show, toastMessage, showToast } = useToastEffect()
+    const { username, password, handleLogin } = userLoginEffect(showToast)
+    return { username, password, handleLogin, show, toastMessage, showToast }
   }
 }
 </script>
