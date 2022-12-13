@@ -13,14 +13,16 @@
       </div>
     </div>
     <!-- v-show="item.imgUrl"防止加载时图片抖动 -->
-    <ShopInfo :item="item" v-show="item.imgUrl"/>
+    <ShopInfo :item="item" v-show="item.imgUrl" :hideBorder="true"/>
+    <Content />
   </div>
 </template>
 <script>
 import { get } from '../../utils/request'
+import { reactive, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ShopInfo from '../../components/ShopInfo.vue'
-import { reactive, toRefs } from 'vue'
+import Content from '../shop/Content.vue'
 // 点击回退操作
 const useBackRouterEffect = () => {
   const router = useRouter()
@@ -36,7 +38,7 @@ const useShopInfoEffect = () => {
   const data = reactive({ item: {} })
   const getItemData = async () => {
     const result = await get(`api/shop/${route.params.id}`)
-    console.log(result.data)
+    // console.log(result.data)
     if (result?.errno === 0) {
       data.item = result.data
     }
@@ -48,7 +50,7 @@ const useShopInfoEffect = () => {
 
 export default {
   name: 'Shop',
-  components: { ShopInfo },
+  components: { ShopInfo, Content },
   setup () {
     const { handleBackClick } = useBackRouterEffect()
     const { item, getItemData } = useShopInfoEffect()

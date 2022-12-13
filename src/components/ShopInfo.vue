@@ -1,7 +1,8 @@
 <template>
   <div class="shop">
   <img class="shop__img" :src="item.imgUrl">
-  <div class="shop__content shop__content--bordered">
+  <div class="shop__content"
+  :class="{'shop__content--bordered': hideBorder ? false: true}">
     <div class="shop__content__title">{{item.name}}</div>
     <div class="shop__content__tags">
       <span class="shop__content__tag">月售:{{item.sales}}</span>
@@ -15,7 +16,7 @@
 <script>
 export default {
   name: 'ShopInfo',
-  props: ['item']
+  props: ['item', 'hideBorder']
 }
 </script>
 <style lang="scss" scoped>
