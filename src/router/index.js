@@ -26,7 +26,11 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "Login" */ '../views/login/Login')
+    component: () => import(/* webpackChunkName: "Login" */ '../views/login/Login'),
+    beforeEnter (to, from, next) {
+      const { isLogin } = localStorage
+      isLogin ? next({ name: 'Home' }) : next()
+    }
   },
   {
     path: '/order',
@@ -45,4 +49,22 @@ const router = createRouter({
   routes
 })
 
+// 全局路由守卫
+router.beforeEach((to, from, next) => {
+  const isLogin = localStorage.isLogin
+  if (isLogin || to.name === 'Login') {
+    next()
+  } else {
+    next(to.name === 'Login')
+  }
+  // if (isLogin) { // 如果存在则往下执行
+  //   next()
+  // } else {//如果不存在则跳转到Login页面
+  //   if (to.path === '/Login') {
+  //     next()
+  //   } else {
+  //     next('/Login')
+  //   }
+  // }
+})
 export default router

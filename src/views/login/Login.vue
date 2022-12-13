@@ -14,7 +14,7 @@
       >
     </div>
     <div class="wrapper__login-button" @click="handleLogin">登录</div>
-    <div class="wrapper__login-link">立即注册</div>
+    <div class="wrapper__login-link" @click="handleRegister">立即注册</div>
     <Toast v-if="show" :msg="toastMessage"/>
   </div>
 </template>
@@ -37,6 +37,7 @@ const userLoginEffect = (showToast) => {
         password: data.password
       })
       if (result?.errno === 0) {
+        localStorage.isLogin = true// 点击登录进入时储存
         router.push({ name: 'Home' })
       } else {
         // alert('登录失败')
@@ -50,13 +51,24 @@ const userLoginEffect = (showToast) => {
   const { username, password } = toRefs(data)
   return { username, password, handleLogin }
 }
+
+// 处理注册逻辑
+const userRegisterEffect = () => {
+  const router = useRouter()
+  const handleRegister = () => {
+    router.push('/Register')
+  }
+  return { handleRegister }
+}
+
 export default {
   name: 'Login',
   components: { Toast },
   setup () {
     const { show, toastMessage, showToast } = useToastEffect()
+    const { handleRegister } = userRegisterEffect()
     const { username, password, handleLogin } = userLoginEffect(showToast)
-    return { username, password, handleLogin, show, toastMessage, showToast }
+    return { username, password, handleLogin, handleRegister, show, toastMessage, showToast }
   }
 }
 </script>
