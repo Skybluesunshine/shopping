@@ -15,6 +15,7 @@
     <!-- v-show="item.imgUrl"防止加载时图片抖动 -->
     <ShopInfo :item="item" v-show="item.imgUrl" :hideBorder="true"/>
     <Content />
+    <Cart />
   </div>
 </template>
 <script>
@@ -23,6 +24,7 @@ import { reactive, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ShopInfo from '../../components/ShopInfo.vue'
 import Content from '../shop/Content.vue'
+import Cart from '../shop/Cart.vue'
 // 点击回退操作
 const useBackRouterEffect = () => {
   const router = useRouter()
@@ -50,7 +52,7 @@ const useShopInfoEffect = () => {
 
 export default {
   name: 'Shop',
-  components: { ShopInfo, Content },
+  components: { ShopInfo, Content, Cart },
   setup () {
     const { handleBackClick } = useBackRouterEffect()
     const { item, getItemData } = useShopInfoEffect()

@@ -67,6 +67,7 @@ const useContentListEffect = (currentTab) => {
       content.list = result.data
     }
   }
+  // watchEffect 不需要指定监听的属性,会自动收集依赖，只要回调函数中引用响应式的属性，那么当这些属性变更的时候，这个回调都会执行
   watchEffect(() => { getContentData() })
   const { list } = toRefs(content)
   return { list, getContentData }
