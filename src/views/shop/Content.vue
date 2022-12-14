@@ -1,9 +1,12 @@
 <template>
   <div class="content">
     <div class="category">
+      <!-- currentTab===item.tab时显示高亮 -->
       <div class="category__item"
+      :class="{'category__item--active':currentTab === item.tab}"
       v-for="item in categories"
       :key="item.name"
+      @click="() => handleClickTab(item.tab)"
       >{{item.name}}</div>
     </div>
     <div class="product">
@@ -29,7 +32,7 @@
 </template>
 <script>
 import { get } from '../../utils/request'
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 // Content左侧
@@ -38,29 +41,42 @@ const categories = [
   { name: '秒杀', tab: 'seckill' },
   { name: '新鲜水果', tab: 'fruit' }
 ]
+// Tab切换相关逻辑
+const useTabEffect = () => {
+  const currentTab = ref(categories[0].tab)// 左侧默认tab为第一个
+  const handleClickTab = (tab) => {
+    // console.log(tab)// all,seckill,fruit
+    currentTab.value = tab
+  }
+  return { currentTab, handleClickTab }
+}
+
 // 右侧列表相关逻辑
-const useContentListEffect = () => {
+const useContentListEffect = (currentTab) => {
   const route = useRoute()
   const shopId = route.params.id
   const content = reactive({
     list: []
   })
   const getContentData = async () => {
-    const result = await get(`api/shop/${shopId}/products`)
+    const result = await get(`api/shop/${shopId}/products`, {
+      tab: currentTab.value
+    })
     // console.log(result)
     if (result?.errno === 0 && result?.data?.length) {
       content.list = result.data
     }
   }
-  getContentData()
+  watchEffect(() => { getContentData() })
   const { list } = toRefs(content)
   return { list, getContentData }
 }
 export default {
   name: 'Content',
   setup () {
-    const { list, getContentData } = useContentListEffect()
-    return { categories, list, getContentData }
+    const { currentTab, handleClickTab } = useTabEffect()
+    const { list, getContentData } = useContentListEffect(currentTab)
+    return { categories, list, getContentData, currentTab, handleClickTab }
   }
 }
 </script>
