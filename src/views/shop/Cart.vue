@@ -16,10 +16,10 @@
           src="http://www.dell-lee.com/imgs/vue3/basket.png"
           class="check__icon__img"
         />
-        <div class="check__icon__tag">总价</div>
+        <div class="check__icon__tag">{{totalCount}}</div>
       </div>
       <div class="check__info">
-        总计：<span class="check__info__price">&yen;10</span>
+        总计：<span class="check__info__price">&yen;{{totalPrice}}</span>
       </div>
       <div class="check__btn">
           去结算
@@ -29,6 +29,51 @@
   </div>
 </template>
 <script>
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+
+const useCartEffect = () => {
+  const route = useRoute()
+  const shopId = route.params.id
+  const store = useStore()
+  const cartList = store.state.cartList
+
+  // 计算总数量
+  const totalCount = computed(() => {
+    const productList = cartList[shopId]
+    let count = 0
+    if (productList) {
+      // console.log(productList)
+      for (const i in productList) {
+        const product = productList[i]
+        count += product.count
+      }
+    }
+    return count
+  })
+
+  // 计算总价格
+  const totalPrice = computed(() => {
+    const productList = cartList[shopId]
+    let price = 0
+    if (productList) {
+      for (const i in productList) {
+        const product = productList[i]
+        price += (product.count * product.price)
+      }
+    }
+    return price.toFixed(2)
+  })
+  return { totalCount, totalPrice }
+}
+export default {
+  name: 'Cart',
+  setup () {
+    const { totalCount, totalPrice } = useCartEffect()
+    return { totalCount, totalPrice }
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import '../../style/viribles.scss';
