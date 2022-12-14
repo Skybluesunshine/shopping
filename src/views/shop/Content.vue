@@ -34,8 +34,7 @@
 import { get } from '../../utils/request'
 import { reactive, toRefs, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-
+import { useCommonCartEffect } from './commonCartEffect'
 // Content左侧
 const categories = [
   { name: '全部商品', tab: 'all' },
@@ -72,18 +71,6 @@ const useContentListEffect = (currentTab, shopId) => {
   return { list, getContentData }
 }
 
-// 购物车
-const useCartEffect = () => {
-  const store = useStore()
-  const cartList = store.state.cartList
-  const changeCartItem = (shopId, productId, productInfo, num) => {
-    // console.log(shopId, productId, productInfo)
-    store.commit('changeCartItem', {
-      shopId, productId, productInfo, num
-    })
-  }
-  return { cartList, changeCartItem }
-}
 export default {
   name: 'Content',
   setup () {
@@ -93,7 +80,7 @@ export default {
     const { currentTab, handleClickTab } = useTabEffect()
     const { list } = useContentListEffect(currentTab)
 
-    const { cartList, changeCartItem } = useCartEffect()
+    const { cartList, changeCartItem } = useCommonCartEffect()
     return {
       categories,
       list,
