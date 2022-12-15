@@ -37,9 +37,36 @@ export default createStore({
       if (product.count < 0) { product.count = 0 }
       // console.log(shopInfo)// {}
       // console.log(product)
+
+      // 选中和未选中处理checked处理
+      if (payload.num > 0) { product.check = true }
+
       shopInfo[productId] = product
       state.cartList[shopId] = shopInfo
+    },
+    // 点击勾选框操作
+    changeCartItemChecked (state, payload) {
+      const { shopId, productId } = payload
+      const product = state.cartList[shopId][productId]
+      product.check = !product.check
+    },
+    // 点击全选操作
+    setCartItemsChecked (state, payload) {
+      const { shopId } = payload
+      const products = state.cartList[shopId]
+      if (products) {
+        for (const i in products) {
+          const product = products[i]
+          product.check = true
+        }
+      }
+    },
+    // 清空购物车操作
+    cleanCartProducts (state, payload) {
+      const { shopId } = payload
+      state.cartList[shopId] = {}
     }
+
   },
   actions: {
   },

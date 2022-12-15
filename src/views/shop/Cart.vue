@@ -1,11 +1,32 @@
 <template>
   <div class="cart">
     <div class="product">
+      <div class="product__header">
+        <div class="product__header__all">
+          <span class="product__header__icon iconfont"
+          v-html="allChecked ? '&#xe652;' : '&#xe601;'"
+          @click="() => setCartItemsChecked(shopId)"
+          ></span>
+          全选
+        </div>
+        <div
+          class="product__header__clear"
+        >
+        <span @click="() => cleanCartProducts(shopId)">
+          清空购物车
+        </span>
+        </div>
+      </div>
       <template
         v-for="item in productList"
         :key="item._id"
       >
         <div class="product__item" v-if="item.count > 0">
+          <div
+          class="product__item__checked iconfont"
+          v-html="item.check ? '&#xe652;' : '&#xe601;'"
+          @click="() => {changeCartItemChecked(shopId,item._id)}"
+          ></div>
           <img class="product__item__img" :src="item.imgUrl" />
           <div class="product__item__detail">
             <h4 class="product__item__title">{{item.name}}</h4>
@@ -78,7 +99,10 @@ const useCartEffect = (shopId) => {
     if (productList) {
       for (const i in productList) {
         const product = productList[i]
-        price += (product.count * product.price)
+        // 要勾选了才计算价格
+        if (product.check) {
+          price += (product.count * product.price)
+        }
       }
     }
     return price.toFixed(2)
@@ -89,7 +113,42 @@ const useCartEffect = (shopId) => {
     const productList = cartList[shopId] || []
     return productList
   })
-  return { totalCount, totalPrice, productList }
+  // 点击勾选框操作
+  const changeCartItemChecked = (shopId, productId) => {
+    store.commit('changeCartItemChecked', { shopId, productId })
+  }
+  // 全选逻辑1
+  const allChecked = computed(() => {
+    const productList = cartList[shopId]
+    let result = true
+    if (productList) {
+      for (const i in productList) {
+        const product = productList[i]
+        // count大于0并且check为false时，result = false
+        if (product.count > 0 && !product.check) {
+          result = false
+        }
+      }
+    }
+    return result
+  })
+  // 点击全选逻辑
+  const setCartItemsChecked = (shopId) => {
+    store.commit('setCartItemsChecked', { shopId })
+  }
+  // 清空购物车
+  const cleanCartProducts = (shopId) => {
+    store.commit('cleanCartProducts', { shopId })
+  }
+  return {
+    totalCount,
+    totalPrice,
+    productList,
+    changeCartItemChecked,
+    cleanCartProducts,
+    allChecked,
+    setCartItemsChecked
+  }
 }
 export default {
   name: 'Cart',
@@ -97,10 +156,23 @@ export default {
     const route = useRoute()
     const shopId = route.params.id
 
-    const { totalCount, totalPrice, productList } = useCartEffect(shopId)
+    const {
+      totalCount, totalPrice, productList, changeCartItemChecked,
+      cleanCartProducts, allChecked, setCartItemsChecked
+    } = useCartEffect(shopId)
     const { changeCartItem } = useCommonCartEffect()
 
-    return { totalCount, totalPrice, productList, shopId, changeCartItem }
+    return {
+      totalCount,
+      totalPrice,
+      productList,
+      shopId,
+      changeCartItem,
+      changeCartItemChecked,
+      cleanCartProducts,
+      allChecked,
+      setCartItemsChecked
+    }
   }
 }
 </script>
