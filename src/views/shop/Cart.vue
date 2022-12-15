@@ -1,6 +1,7 @@
 <template>
+  <div class="mask" v-if="(showCart && totalCount>0)" @click="handleCartShowChange"></div>
   <div class="cart">
-    <div class="product">
+    <div class="product" v-if="(showCart && totalCount > 0)">
       <div class="product__header">
         <div class="product__header__all">
           <span class="product__header__icon iconfont"
@@ -48,29 +49,29 @@
           </div>
         </div>
       </template>
-
-      <div class="check">
-      <div class="check__icon">
-        <img
-          src="http://www.dell-lee.com/imgs/vue3/basket.png"
-          class="check__icon__img"
-        />
-        <div class="check__icon__tag">{{totalCount}}</div>
-      </div>
-      <div class="check__info">
-        总计：<span class="check__info__price">&yen;{{totalPrice}}</span>
-      </div>
-      <div class="check__btn">
-          去结算
-      </div>
     </div>
-    </div>
+    <div class="check">
+        <div class="check__icon">
+          <img
+            src="http://www.dell-lee.com/imgs/vue3/basket.png"
+            class="check__icon__img"
+            @click="handleCartShowChange"
+          />
+          <div class="check__icon__tag">{{totalCount}}</div>
+        </div>
+        <div class="check__info">
+          总计：<span class="check__info__price">&yen;{{totalPrice}}</span>
+        </div>
+        <div class="check__btn">
+            去结算
+        </div>
+      </div>
   </div>
 </template>
 <script>
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useCommonCartEffect } from './commonCartEffect'
 
 // 获取购物车信息逻辑
@@ -140,6 +141,7 @@ const useCartEffect = (shopId) => {
   const cleanCartProducts = (shopId) => {
     store.commit('cleanCartProducts', { shopId })
   }
+
   return {
     totalCount,
     totalPrice,
@@ -155,7 +157,11 @@ export default {
   setup () {
     const route = useRoute()
     const shopId = route.params.id
-
+    // 购物车展示隐藏
+    const showCart = ref(false)
+    const handleCartShowChange = () => {
+      showCart.value = !showCart.value
+    }
     const {
       totalCount, totalPrice, productList, changeCartItemChecked,
       cleanCartProducts, allChecked, setCartItemsChecked
@@ -171,7 +177,9 @@ export default {
       changeCartItemChecked,
       cleanCartProducts,
       allChecked,
-      setCartItemsChecked
+      setCartItemsChecked,
+      showCart,
+      handleCartShowChange
     }
   }
 }
