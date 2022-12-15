@@ -21,10 +21,10 @@
           </p>
         </div>
         <div class="product__number">
-          <span class="product__number__minus" @click="() => {changeCartItem(shopId,item._id,item,-1)}">-</span>
-          {{cartList?.[shopId]?.[item._id]?.count || 0}}
+          <span class="product__number__minus" @click="() => {changeCartItemInfo(shopId,item._id,item,-1,shopName)}">-</span>
+          {{cartList?.[shopId]?.productList?.[item._id]?.count || 0}}
           <!--shopId,item._id,item商铺id，商铺里产品id，产品信息  -->
-          <span class="product__number__plus" @click="() => {changeCartItem(shopId,item._id,item,1)}">+</span>
+          <span class="product__number__plus" @click="() => {changeCartItemInfo(shopId,item._id,item,1,shopName)}">+</span>
         </div>
       </div>
     </div>
@@ -35,6 +35,7 @@ import { get } from '../../utils/request'
 import { reactive, toRefs, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCommonCartEffect } from './commonCartEffect'
+import { useStore } from 'vuex'
 // Content左侧
 const categories = [
   { name: '全部商品', tab: 'all' },
@@ -73,14 +74,26 @@ const useContentListEffect = (currentTab, shopId) => {
 
 export default {
   name: 'Content',
+  props: ['shopName'],
   setup () {
     const route = useRoute()
     const shopId = route.params.id
+
+    const store = useStore()
 
     const { currentTab, handleClickTab } = useTabEffect()
     const { list } = useContentListEffect(currentTab)
 
     const { cartList, changeCartItem } = useCommonCartEffect()
+    // shopName逻辑
+    const changeShopName = (shopId, shopName) => {
+      store.commit('changeShopName', { shopId, shopName })
+    }
+    const changeCartItemInfo = (shopId, productId, item, num, shopName) => {
+      changeCartItem(shopId, productId, item, num)
+      changeShopName(shopId, shopName)
+    }
+
     return {
       categories,
       list,
@@ -88,7 +101,8 @@ export default {
       handleClickTab,
       shopId,
       cartList,
-      changeCartItem
+      changeCartItem,
+      changeCartItemInfo
     }
   }
 }

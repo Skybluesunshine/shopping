@@ -14,7 +14,7 @@
     </div>
     <!-- v-show="item.imgUrl"防止加载时图片抖动 -->
     <ShopInfo :item="item" v-show="item.imgUrl" :hideBorder="true"/>
-    <Content />
+    <Content :shopName="item.name"/> <!-- 把shopName传过去 -->
     <Cart />
   </div>
 </template>

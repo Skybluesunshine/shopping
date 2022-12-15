@@ -25,12 +25,15 @@ export default createStore({
     changeCartItem (state, payload) {
       // console.log(payload)
       const { shopId, productId, productInfo } = payload
-      let shopInfo = state.cartList[shopId]
-      if (!shopInfo) { shopInfo = {} }
-      let product = shopInfo[productId]
+      const shopInfo = state.cartList[shopId] || {
+        shopName: '', productList: {}
+      }
+      let product = shopInfo.productList[productId]
       if (!product) {
+        productInfo.count = 0
         product = productInfo
-        product.count = 0
+        // product = productInfo
+        // product.count = 0
       }
       // 同时处理加减
       product.count = product.count + payload.num
@@ -41,19 +44,20 @@ export default createStore({
       // 选中和未选中处理checked处理
       if (payload.num > 0) { product.check = true }
 
-      shopInfo[productId] = product
+      shopInfo.productList[productId] = product
       state.cartList[shopId] = shopInfo
+      console.log(state.cartList)
     },
     // 点击勾选框操作
     changeCartItemChecked (state, payload) {
       const { shopId, productId } = payload
-      const product = state.cartList[shopId][productId]
+      const product = state.cartList[shopId].productList[productId]
       product.check = !product.check
     },
     // 点击全选操作
     setCartItemsChecked (state, payload) {
       const { shopId } = payload
-      const products = state.cartList[shopId]
+      const products = state.cartList[shopId].productList
       if (products) {
         for (const i in products) {
           const product = products[i]
@@ -64,7 +68,15 @@ export default createStore({
     // 清空购物车操作
     cleanCartProducts (state, payload) {
       const { shopId } = payload
-      state.cartList[shopId] = {}
+      state.cartList[shopId].productList = {}
+    },
+    changeShopName (state, payload) {
+      const { shopId, shopName } = payload
+      const shopInfo = state.cartList[shopId] || {
+        shopName: '', productList: {}
+      }
+      shopInfo.shopName = shopName
+      state.cartList[shopId] = shopInfo
     }
 
   },

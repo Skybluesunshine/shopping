@@ -81,7 +81,7 @@ const useCartEffect = (shopId) => {
 
   // 计算总数量
   const totalCount = computed(() => {
-    const productList = cartList[shopId]
+    const productList = cartList[shopId]?.productList
     let count = 0
     if (productList) {
       // console.log(productList)
@@ -95,7 +95,7 @@ const useCartEffect = (shopId) => {
 
   // 计算总价格
   const totalPrice = computed(() => {
-    const productList = cartList[shopId]
+    const productList = cartList[shopId]?.productList
     let price = 0
     if (productList) {
       for (const i in productList) {
@@ -111,7 +111,7 @@ const useCartEffect = (shopId) => {
 
   // productList
   const productList = computed(() => {
-    const productList = cartList[shopId] || []
+    const productList = cartList[shopId]?.productList || []
     return productList
   })
   // 点击勾选框操作
@@ -120,7 +120,7 @@ const useCartEffect = (shopId) => {
   }
   // 全选逻辑1
   const allChecked = computed(() => {
-    const productList = cartList[shopId]
+    const productList = cartList[shopId]?.productList
     let result = true
     if (productList) {
       for (const i in productList) {
