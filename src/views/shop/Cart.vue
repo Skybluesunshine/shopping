@@ -63,7 +63,9 @@
           总计：<span class="check__info__price">&yen;{{totalPrice}}</span>
         </div>
         <div class="check__btn">
+          <router-link :to="{path:`/order/${shopId}`}">
             去结算
+          </router-link>
         </div>
       </div>
   </div>
