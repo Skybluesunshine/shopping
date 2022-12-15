@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="wrapper">
     <StaticPart />
     <Docker />
     <Nearby />
@@ -15,7 +15,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.header {
+.wrapper {
   overflow-y: auto;
   position: absolute;
   left: 0;

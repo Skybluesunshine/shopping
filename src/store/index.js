@@ -1,23 +1,33 @@
 import { createStore } from 'vuex'
 
+// localStorage实现购物车数据持久存储
+const setLocalCartList = (state) => {
+  const { cartList } = state
+  const cartListString = JSON.stringify(cartList)
+  localStorage.cartList = cartListString
+}
+// const getLocaCartList = () => {
+//   return JSON.parse(localStorage.cartList) || {}
+// }
 export default createStore({
   state: {
     cartList: {
-      // shopId: {
-      //   shopName: '沃尔玛',
-      //   productList: { // 商品列表
-      //     productId: { // 商品id及内容
-      //       _id: '1',
-      //       name: '番茄250g/份',
-      //       imgUrl: 'http://www.dell-lee.com/imgs/vue3/tomato.png',
-      //       sales: 10,
-      //       price: 33.6,
-      //       oldPrice: 39.6,
-      //       count: 2
-      //     }
-      //   }
-      // }
+    // shopId: {
+    //   shopName: '沃尔玛',
+    //   productList: { // 商品列表
+    //     productId: { // 商品id及内容
+    //       _id: '1',
+    //       name: '番茄250g/份',
+    //       imgUrl: 'http://www.dell-lee.com/imgs/vue3/tomato.png',
+    //       sales: 10,
+    //       price: 33.6,
+    //       oldPrice: 39.6,
+    //       count: 2
+    //     }
+    //   }
+    // }
     }
+    // cartList: getLocaCartList()
   },
   getters: {
   },
@@ -47,12 +57,14 @@ export default createStore({
       shopInfo.productList[productId] = product
       state.cartList[shopId] = shopInfo
       console.log(state.cartList)
+      setLocalCartList(state)
     },
     // 点击勾选框操作
     changeCartItemChecked (state, payload) {
       const { shopId, productId } = payload
       const product = state.cartList[shopId].productList[productId]
       product.check = !product.check
+      setLocalCartList(state)
     },
     // 点击全选操作
     setCartItemsChecked (state, payload) {
@@ -64,11 +76,13 @@ export default createStore({
           product.check = true
         }
       }
+      setLocalCartList(state)
     },
     // 清空购物车操作
     cleanCartProducts (state, payload) {
       const { shopId } = payload
       state.cartList[shopId].productList = {}
+      setLocalCartList(state)
     },
     changeShopName (state, payload) {
       const { shopId, shopName } = payload
@@ -77,8 +91,8 @@ export default createStore({
       }
       shopInfo.shopName = shopName
       state.cartList[shopId] = shopInfo
+      setLocalCartList(state)
     }
-
   },
   actions: {
   },

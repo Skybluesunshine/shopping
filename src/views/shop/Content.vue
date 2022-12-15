@@ -72,6 +72,20 @@ const useContentListEffect = (currentTab, shopId) => {
   return { list, getContentData }
 }
 
+// 购物车相关逻辑
+const useCartEffect = () => {
+  const store = useStore()
+  const { cartList, changeCartItem } = useCommonCartEffect()
+  // shopName逻辑
+  const changeShopName = (shopId, shopName) => {
+    store.commit('changeShopName', { shopId, shopName })
+  }
+  const changeCartItemInfo = (shopId, productId, item, num, shopName) => {
+    changeCartItem(shopId, productId, item, num)
+    changeShopName(shopId, shopName)
+  }
+  return { cartList, changeCartItemInfo }
+}
 export default {
   name: 'Content',
   props: ['shopName'],
@@ -79,21 +93,10 @@ export default {
     const route = useRoute()
     const shopId = route.params.id
 
-    const store = useStore()
-
     const { currentTab, handleClickTab } = useTabEffect()
     const { list } = useContentListEffect(currentTab)
 
-    const { cartList, changeCartItem } = useCommonCartEffect()
-    // shopName逻辑
-    const changeShopName = (shopId, shopName) => {
-      store.commit('changeShopName', { shopId, shopName })
-    }
-    const changeCartItemInfo = (shopId, productId, item, num, shopName) => {
-      changeCartItem(shopId, productId, item, num)
-      changeShopName(shopId, shopName)
-    }
-
+    const { cartList, changeCartItemInfo } = useCartEffect()
     return {
       categories,
       list,
@@ -101,7 +104,6 @@ export default {
       handleClickTab,
       shopId,
       cartList,
-      changeCartItem,
       changeCartItemInfo
     }
   }
