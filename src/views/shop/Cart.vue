@@ -74,7 +74,7 @@
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { computed, ref } from 'vue'
-import { useCommonCartEffect } from './commonCartEffect'
+import { useCommonCartEffect } from '../../effects/cartEffect'
 
 // 获取购物车信息逻辑
 const useCartEffect = (shopId) => {
@@ -112,10 +112,10 @@ const useCartEffect = (shopId) => {
   })
 
   // productList
-  const productList = computed(() => {
-    const productList = cartList[shopId]?.productList || []
-    return productList
-  })
+  // const productList = computed(() => {
+  //   const productList = cartList[shopId]?.productList || []
+  //   return productList
+  // })
   // 点击勾选框操作
   const changeCartItemChecked = (shopId, productId) => {
     store.commit('changeCartItemChecked', { shopId, productId })
@@ -147,7 +147,6 @@ const useCartEffect = (shopId) => {
   return {
     totalCount,
     totalPrice,
-    productList,
     changeCartItemChecked,
     cleanCartProducts,
     allChecked,
@@ -164,11 +163,8 @@ export default {
     const handleCartShowChange = () => {
       showCart.value = !showCart.value
     }
-    const {
-      totalCount, totalPrice, productList, changeCartItemChecked,
-      cleanCartProducts, allChecked, setCartItemsChecked
-    } = useCartEffect(shopId)
-    const { changeCartItem } = useCommonCartEffect()
+    const { totalCount, totalPrice, changeCartItemChecked, cleanCartProducts, allChecked, setCartItemsChecked } = useCartEffect(shopId)
+    const { changeCartItem, productList } = useCommonCartEffect(shopId)
 
     return {
       totalCount,

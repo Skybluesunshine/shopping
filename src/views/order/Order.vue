@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="top">
       <div class="top__header">
-        <div class="iconfont top__header__back">&#xe6f2;</div>
+        <div class="iconfont top__header__back">&#xe60c;</div>
         确认订单
       </div>
       <div class="top__receiver">
@@ -53,8 +53,8 @@ export default {
   setup () {
     const route = useRoute()
     const shopId = route.params.id
-    const { shopName, productList } = useCommonCartEffect(shopId)
-    return { shopName, productList }
+    const { productList, shopName } = useCommonCartEffect(shopId)
+    return { shopId, productList, shopName }
   }
 }
 </script>
