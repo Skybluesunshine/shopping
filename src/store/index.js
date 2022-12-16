@@ -6,12 +6,16 @@ const setLocalCartList = (state) => {
   const cartListString = JSON.stringify(cartList)
   localStorage.cartList = cartListString
 }
-// const getLocaCartList = () => {
-//   return JSON.parse(localStorage.cartList) || {}
-// }
+const getLocaCartList = () => {
+  try {
+    return JSON.parse(localStorage.cartList)
+  } catch (error) {
+    return {}
+  }
+}
 export default createStore({
   state: {
-    cartList: {
+    // cartList: {
     // shopId: {
     //   shopName: '沃尔玛',
     //   productList: { // 商品列表
@@ -26,8 +30,8 @@ export default createStore({
     //     }
     //   }
     // }
-    }
-    // cartList: getLocaCartList()
+    // }
+    cartList: getLocaCartList()
   },
   getters: {
   },
@@ -93,6 +97,10 @@ export default createStore({
       shopInfo.shopName = shopName
       state.cartList[shopId] = shopInfo
       setLocalCartList(state)
+    },
+    //
+    clearCartData (state, shopId) {
+      state.cartList[shopId].productList = {}
     }
   },
   actions: {

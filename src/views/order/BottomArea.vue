@@ -1,6 +1,6 @@
 <template>
   <div class="order">
-    <div class="order__price">实付金额 <b>&yen;100</b></div>
+    <div class="order__price">实付金额 <b>¥{{calculations.price}}</b></div>
     <div class="order__btn">提交订单</div>
   </div>
   <div class="mask">
@@ -10,19 +10,57 @@
       <div class="mask__content__btns">
         <div
           class="mask__content__btn mask__content__btn--first"
-          @click="handleCancelOrder"
+          @click="() => handleConfirmOrder(true)"
         >取消订单</div>
         <div
           class="mask__content__btn mask__content__btn--last"
-          @click="handleConfirmOrder"
+          @click="() => handleConfirmOrder(false)"
         >确认支付</div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { post } from '../../utils/request'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { useCommonCartEffect } from '../../effects/cartEffect'
+
 export default {
-  name: 'BottomArea'
+  name: 'BottomArea',
+  setup () {
+    const router = useRouter()
+    const store = useStore()
+
+    const route = useRoute()
+    const shopId = Number(route.params.id)
+    const { calculations, shopName, productList } = useCommonCartEffect(shopId)
+    const handleConfirmOrder = async (isCanceled) => {
+      console.log(productList)
+      const products = []
+      for (const i in productList.value) {
+        const product = productList.value[i]
+        products.push({ id: Number(product._id), num: product.count })
+      }
+      try {
+        const result = await post('/api/order', {
+          addressId: 1,
+          shopId,
+          shopName: shopName.value,
+          isCanceled,
+          products
+        })
+        // console.log(result)
+        if (result?.errno === 0) {
+          store.commit('clearCartData', shopId)
+          router.push({ name: 'Home' })
+        }
+      } catch (e) {
+        // 提示下单失败
+      }
+    }
+    return { calculations, handleConfirmOrder }
+  }
 }
 </script>
 <style lang="scss" scoped>
