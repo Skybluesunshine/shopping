@@ -7,16 +7,16 @@ const setLocalCartList = (state) => {
   localStorage.cartList = cartListString
 }
 // 使用trycatch 即使localStorage中的数据被删为空，首页也会正常显示
-const getLocaCartList = () => {
-  try {
-    return JSON.parse(localStorage.cartList)
-  } catch (error) {
-    return {}
-  }
-}
+// const getLocaCartList = () => {
+//   try {
+//     return JSON.parse(localStorage.cartList)
+//   } catch (error) {
+//     return {}
+//   }
+// }
 export default createStore({
   state: {
-    // cartList: {
+    cartList: {
     // shopId: {
     //   shopName: '沃尔玛',
     //   productList: { // 商品列表
@@ -31,8 +31,8 @@ export default createStore({
     //     }
     //   }
     // }
-    // }
-    cartList: getLocaCartList()
+    }
+    // cartList: getLocaCartList()
   },
   getters: {
   },

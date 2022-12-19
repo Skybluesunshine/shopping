@@ -14,14 +14,14 @@ export const useCommonCartEffect = (shopId) => {
   const productList = computed(() => {
     const productList = cartList[shopId]?.productList || {}
     // 过滤productList中数量小于0的
-    // const notEmptyProductList = {}
-    // for (const i in productList) {
-    //   const product = productList[i]
-    //   if (product.count > 0) {
-    //     notEmptyProductList[i] = product
-    //   }
-    // }
-    return productList
+    const notEmptyProductList = {}
+    for (const i in productList) {
+      const product = productList[i]
+      if (product.count > 0) {
+        notEmptyProductList[i] = product
+      }
+    }
+    return notEmptyProductList
   })
   // shopName
   const shopName = computed(() => {

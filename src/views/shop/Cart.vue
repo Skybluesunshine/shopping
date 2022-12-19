@@ -13,7 +13,7 @@
         >
           <span
             class="product__header__icon iconfont"
-            v-html="calculations.allChecked ? '&#xe652;': '&#xe667;'"
+            v-html="calculations.allChecked ? '&#xe652;': '&#xe601;'"
           >
           </span>
           全选
@@ -31,7 +31,7 @@
       >
         <div
           class="product__item__checked iconfont"
-          v-html="item.check ? '&#xe652;': '&#xe667;'"
+          v-html="item.check ? '&#xe652;': '&#xe601;'"
           @click="() => changeCartItemChecked(shopId, item._id)"
         />
         <img class="product__item__img" :src="item.imgUrl" />
@@ -67,8 +67,8 @@
       <div class="check__info">
         总计：<span class="check__info__price">&yen; {{calculations.price}}</span>
       </div>
-      <div class="check__btn">
-        <router-link :to="{path: `/order/${shopId}`}" v-show="calculations.total > 0">
+      <div class="check__btn" v-show="calculations.total > 0">
+        <router-link :to="{path: `/order/${shopId}`}">
           去结算
         </router-link>
       </div>
@@ -82,11 +82,9 @@ import { ref } from 'vue'
 import { useCommonCartEffect } from '../../effects/cartEffect'
 
 // 获取购物车信息逻辑
-const useCartEffect = () => {
+const useCartEffect = (shopId) => {
   const store = useStore()
-  const route = useRoute()
-  const shopId = route.params.id
-  const { calculations } = useCommonCartEffect(shopId)
+  const { calculations, productList, changeCartItem } = useCommonCartEffect(shopId)
   // 计算总数量
   // const totalCount = computed(() => {
   //   const productList = cartList[shopId]?.productList
@@ -154,7 +152,9 @@ const useCartEffect = () => {
     calculations,
     changeCartItemChecked,
     cleanCartProducts,
-    setCartItemsChecked
+    setCartItemsChecked,
+    productList,
+    changeCartItem
   }
 }
 export default {
@@ -167,8 +167,7 @@ export default {
     const handleCartShowChange = () => {
       showCart.value = !showCart.value
     }
-    const { calculations, changeCartItemChecked, cleanCartProducts, setCartItemsChecked } = useCartEffect(shopId)
-    const { changeCartItem, productList } = useCommonCartEffect(shopId)
+    const { productList, changeCartItem, calculations, changeCartItemChecked, cleanCartProducts, setCartItemsChecked } = useCartEffect(shopId)
 
     return {
       calculations,
