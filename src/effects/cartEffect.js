@@ -12,7 +12,15 @@ export const useCommonCartEffect = (shopId) => {
   }
   // 购物列表
   const productList = computed(() => {
-    const productList = cartList[shopId]?.productList || []
+    const productList = cartList[shopId]?.productList || {}
+    // 过滤productList中数量小于0的
+    // const notEmptyProductList = {}
+    // for (const i in productList) {
+    //   const product = productList[i]
+    //   if (product.count > 0) {
+    //     notEmptyProductList[i] = product
+    //   }
+    // }
     return productList
   })
   // shopName

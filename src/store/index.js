@@ -6,6 +6,7 @@ const setLocalCartList = (state) => {
   const cartListString = JSON.stringify(cartList)
   localStorage.cartList = cartListString
 }
+// 使用trycatch 即使localStorage中的数据被删为空，首页也会正常显示
 const getLocaCartList = () => {
   try {
     return JSON.parse(localStorage.cartList)
@@ -98,8 +99,9 @@ export default createStore({
       state.cartList[shopId] = shopInfo
       setLocalCartList(state)
     },
-    //
-    clearCartData (state, shopId) {
+    // 点击确认订单时清空购物车数据
+    clearCartData (state, payload) {
+      const { shopId } = payload
       state.cartList[shopId].productList = {}
     }
   },

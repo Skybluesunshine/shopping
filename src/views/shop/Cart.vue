@@ -68,7 +68,7 @@
         总计：<span class="check__info__price">&yen; {{calculations.price}}</span>
       </div>
       <div class="check__btn">
-        <router-link :to="{path: `/order/${shopId}`}">
+        <router-link :to="{path: `/order/${shopId}`}" v-show="calculations.total > 0">
           去结算
         </router-link>
       </div>
