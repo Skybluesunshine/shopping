@@ -24,11 +24,11 @@
           >清空购物车</span>
         </div>
       </div>
-      <div
+      <template
         v-for="item in productList"
         :key="item._id"
-        class="product__item"
       >
+      <div class="product__item" v-if="item.count > 0">
         <div
           class="product__item__checked iconfont"
           v-html="item.check ? '&#xe652;': '&#xe601;'"
@@ -44,16 +44,17 @@
         </div>
         <div class="product__number">
           <span
-            class="product__number__minus"
+            class="product__number__minus iconfont"
             @click="() => { changeCartItem(shopId, item._id, item, -1) }"
-          >-</span>
+          >&#xe84f;</span>
             {{item.count || 0}}
           <span
-            class="product__number__plus"
+            class="product__number__plus iconfont"
             @click="() => { changeCartItem(shopId, item._id, item, 1) }"
-          >+</span>
+          >&#xe728;</span>
         </div>
       </div>
+      </template>
     </div>
     <div class="check">
       <div class="check__icon">
@@ -210,7 +211,7 @@ export default {
   &__header {
     display: flex;
     line-height: .52rem;
-    border-bottom: 1px solid $content-bgColor;
+    border-bottom: .01rem solid $content-bgColor;
     font-size: .14rem;
     color: $content-fontcolor;
     &__all {
@@ -280,24 +281,16 @@ export default {
       position: absolute;
       right: 0;
       bottom: .26rem;
-      &__minus, &__plus
-       {
-        display: inline-block;
-        width: .2rem;
-        height: .2rem;
-        line-height: .16rem;;
-        border-radius: 50%;
-        font-size: .2rem;
-        text-align: center;
-      }
       &__minus {
-        border: .01rem solid $medium-fontColor;
+        position:relative;
+        top: .02rem;
         color: $medium-fontColor;
         margin-right: .05rem;
       }
       &__plus {
-        background: $btn-bgColor;
-        color: $bgColor;
+        position:relative;
+        top: .02rem;
+        color: $btn-bgColor;
         margin-left: .05rem;
       }
     }
@@ -346,7 +339,7 @@ export default {
   }
   &__btn {
     width: .98rem;
-    background-color: #4FB0F9;
+    background-color: $btn-bgColor;
     text-align: center;
     font-size: .14rem;
     a {
