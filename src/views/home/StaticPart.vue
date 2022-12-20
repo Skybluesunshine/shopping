@@ -18,7 +18,7 @@
     <div class="icons__item" v-for="(item,index) in iconsList" :key="index">
       <img class="icons__item__img"
       :src="`http://www.dell-lee.com/imgs/vue3/${item.imgName}.png`" alt="">
-      <p>{{item.desc}}</p>
+      <p class="icons__item__content">{{item.desc}}</p>
     </div>
   </div>
   <div class="gap"></div>
@@ -106,6 +106,9 @@ export default {
       margin: 0.06rem 0 0.16rem 0;
       text-align: center;
       color: $content-fontcolor;
+    }
+    &__content {
+      text-align: center;
     }
   }
 }
